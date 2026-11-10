@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Student portal{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h1>Welcome, {{ student.full_name }}</h1>
+  <p>You are logged in to the student portal.</p>
+  <form method="post" action="{{ url_for('main.logout') }}">
+    <button class="btn btn-secondary" type="submit">Log out</button>
+  </form>
+</section>
+{% endblock %}
