@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+<section class="card card-narrow">
+  {% if logged_in %}
+    <h1>Welcome</h1>
+  {% else %}
+    <h1>Log in</h1>
+    <form method="post">
+      <div class="form-group">
+        <label for="student_id">Student ID</label>
+        <input id="student_id" name="student_id" type="text" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required>
+      </div>
+      <button class="btn btn-primary" type="submit">Log in</button>
+    </form>
+    <p>Need an account? <a href="{{ url_for('main.register') }}">Register</a></p>
+  {% endif %}
+</section>
+{% endblock %}
