@@ -30,7 +30,18 @@ def _registration_values(form_data):
 
 @bp.route("/")
 def index():
-    return redirect(url_for("main.register"))
+    student = _get_authenticated_student()
+    if student is None:
+        return redirect(url_for("main.login"))
+    return render_template("portal.html", student=student)
+
+
+def _get_authenticated_student():
+    """Return the logged-in student, or None when the session is invalid."""
+    student_id = session.get("student_id")
+    if student_id is None:
+        return None
+    return Student.query.filter_by(id=student_id).first()
 
 
 @bp.route("/register", methods=["GET", "POST"])
@@ -76,9 +87,17 @@ def login():
         password = request.form.get("password", "")
         student = Student.query.filter_by(student_id=student_id).first()
         if student and check_password_hash(student.password_hash, password):
+            session.clear()
             session["student_id"] = student.id
             flash("Login successful.", "success")
             return render_template("login.html", logged_in=True)
         flash("Invalid student ID or password.", "error")
 
     return render_template("login.html", logged_in=False)
+
+
+@bp.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    flash("You have been logged out.", "success")
+    return redirect(url_for("main.login"))
